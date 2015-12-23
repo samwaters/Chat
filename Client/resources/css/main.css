@@ -1,0 +1,7 @@
+* { box-sizing: border-box; }
+body { padding-top:60px; }
+.clear { clear:both; }
+.navbar-nav { float:left; margin:0; }
+.navbar-nav > li { float:left; }
+.row { margin-left:0; margin-right:0; }
+.navbar-nav .open .dropdown-menu { background-color:#fff; position:absolute; }

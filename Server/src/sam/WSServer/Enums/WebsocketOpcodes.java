@@ -1,0 +1,6 @@
+package sam.WSServer.Enums;
+
+public enum WebsocketOpcodes
+{
+	CONTINUATION, TEXT, BINARY, NONCONTROL_RESERVED, CLOSE, PING, PONG, CONTROL_RESERVED, INVALID
+}

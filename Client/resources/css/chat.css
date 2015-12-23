@@ -1,0 +1,47 @@
+html, body { height:100%; }
+.container-fluid { padding-left:5px; padding-right:5px; }
+#application { height:100%; padding:0 0 40px 0; position:relative; }
+#application .tab-pane { height:100%; max-height:100%; overflow:auto; }
+.tab-content { max-height:100%; overflow:auto; }
+.room-info { background-color: #FFFBCC; border-radius: 5px; margin-bottom: 10px; padding: 10px; }
+.message { padding:2px; }
+.message:nth-child(even) { background-color:#eee; }
+.timestamp { color:#999; float:right; font-size:10px; }
+.fromuser { font-weight:bold; }
+.messagetext { }
+
+.tile { border-radius:5px; margin-bottom:10px; }
+.tile h3 { background-color:#eee; font-size:16px; margin:0; padding:5px; }
+.tile h3 input { float:right; font-size:10px; }
+.tile .tile-content { max-height:200px; overflow:auto; }
+.tile .tile-list-item { cursor:pointer; padding:2px 0; }
+.tile .tile-list-item:hover { background-color:#eee; }
+.tile .tile-list-item .tile-list-options { display:none; float:right; }
+.tile .tile-list-item .tile-list-options ul { margin:0; }
+.tile .tile-list-item .tile-list-options li { display:inline-block; margin-right:10px; }
+.tile .tile-list-item:hover .tile-list-options { display:block; }
+
+#room-select .nav-pills { border-bottom:1px solid #eee; }
+#room-select .nav-pills li a { padding:5px 15px; }
+#current-users ul { margin:0; padding:0; }
+#current-users li.user { cursor: pointer; list-style-type: none; padding: 2px 0 2px 15px; position: relative; }
+#current-users li.user:hover { background-color:#eee; }
+#current-users li.user .status { border-radius:4px; display:inline-block; height:8px; margin-top:-4px; position:absolute; right:3px; top:50%; width:8px; }
+#current-users li.user .status.active { background-color:#00AA00; }
+#current-users li.user .status.away { background-color:#FF9900; }
+#current-users ul.user-options { display:none; }
+#current-users li.user:hover ul.user-options { display:block; }
+#current-users ul.user-options li { display: inline; font-size: 10px; margin-right: 10px; }
+
+#controls { bottom:0; padding:5px 120px 5px 5px; position:absolute; width:100%; }
+#controls .options { padding-top:3px; position:absolute; right:5px; }
+#message { border-radius:5px; height:30px; width:100%; }
+
+.col-narrow { padding:0 5px; }
+.h100 { height:100%; }
+.row.h100 { overflow:auto; }
+@media (max-width:992px)
+{
+    .row.h100 { height:auto; max-height:100%; }
+}
+

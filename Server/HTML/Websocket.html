@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Websocket Client</title>
+		<link rel="stylesheet" type="text/css" href="Websocket.css" />
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+	</head>
+	<body>
+		<nav class="nav navbar-inverse navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Websocket Client</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="#">Test Page</a></li>
+					<li><a href="#">Some Other Link</a></li>
+				</ul>
+			</div>
+		</nav>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-2">
+					<h3>Server Settings</h3>
+					<form action="" method="post">
+						<div class="form-group">
+							<label for="server">Server Address</label>
+							<input class="form-control" type="text name="server" id="server" value="localhost" />
+						</div>
+						<div class="form-group">
+							<label for="server">Server Port</label>
+							<input class="form-control" type="text name="port" id="port" value="9000" />
+						</div>
+						<div class="form-group">
+						<p><strong>Server Protocol</strong></p>
+							<label class="radio-inline">
+								<input type="radio" name="serverProtocol" id="serverProtocolJSON" value="json" checked />
+								JSON
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="serverProtocol" id="serverProtocolXML" value="xml" />
+								XML
+							</label>
+						</div>
+						<div class="form-group">
+							<button type="button" class="btn btn-success" id="connectBtn">Connect To Server</button>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-7">
+					Two
+				</div>
+				<div class="col-md-3">
+					<h3>Log Output</h3>
+					<div id="log"></div>
+				</div>
+			</div>
+		</div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script type="text/javascript" src="Websocket.js"></script>
+		<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	</body>
+</html>
