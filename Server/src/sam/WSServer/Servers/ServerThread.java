@@ -30,6 +30,11 @@ public class ServerThread extends Thread
 		this.threadName = threadName;
 	}
 	
+	public ServerThread(SSLServer server, Socket socket, String threadName)
+	{
+		
+	}
+	
 	public ConnectionType getConnectionType()
 	{
 		return this.connectionType;
@@ -133,7 +138,6 @@ public class ServerThread extends Thread
 		{
 			try
 			{
-				Utils.logMessage("Sending byte message " + message.length);
 				this.socketOutput.write(message);
 				return true;
 			}
@@ -148,7 +152,6 @@ public class ServerThread extends Thread
 	
 	public boolean sendMessage(String message)
 	{
-		Utils.logMessage("Sending string message " + message);
 		return this.sendMessage(message.getBytes());
 	}
 	

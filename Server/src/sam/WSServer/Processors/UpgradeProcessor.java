@@ -48,8 +48,6 @@ public class UpgradeProcessor implements IProcessor
 		hR.addHeader("Connection", "Upgrade");
 		hR.addHeader("Sec-WebSocket-Accept", challengeResponse);
 		//hR.addHeader("Sec-WebSocket-Protocol", "chat");
-		Utils.logMessage("Challenge = " + this._headers.get("SEC-WEBSOCKET-KEY"));
-		Utils.logMessage("Key = " + challengeResponse);
 		this._thread.sendMessage(hR.respond("HTTP/1.1 101 Switching Protocols", null));
 		this._thread.setConnectionType(ConnectionType.WEBSOCKET);
 	}
