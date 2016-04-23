@@ -1,16 +1,17 @@
-package sam.WSServer.Messages;
+package sam.WSServer.Responders;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import sam.WSServer.Enums.WebsocketOpcodes;
+import sam.WSServer.Messages.WebsocketFrame;
 
-public class WebsocketMessage extends BaseMessage
+public class WebsocketResponder
 {
 	private ArrayList<WebsocketFrame> frames;
 
-	public WebsocketMessage()
+	public WebsocketResponder()
 	{
 		this.frames = new ArrayList<WebsocketFrame>();
 	}

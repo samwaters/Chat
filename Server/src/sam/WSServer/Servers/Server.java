@@ -1,8 +1,13 @@
 package sam.WSServer.Servers;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.ServerSocket;
+import java.security.KeyStore;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocket;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +17,7 @@ import sam.WSServer.Utils;
 public class Server extends Thread
 {
 	private int port;
-	private ServerSocket serverSocket;
+	private SSLServerSocket serverSocket;
 	private boolean canRun = true;
 	private Map<String, ServerThread> clients;
 	
@@ -27,11 +32,20 @@ public class Server extends Thread
 	{
 		try
 		{
-			this.serverSocket = new ServerSocket(this.port);
+			SSLContext sc = SSLContext.getInstance("TLSv1.2");
+			KeyManagerFactory km = KeyManagerFactory.getInstance("SunX509");
+			KeyStore ks = KeyStore.getInstance("JKS");
+			ks.load(new FileInputStream("/Users/sam/Projects/Chat/Server/keystore.jks"), "pass123456".toCharArray());
+			km.init(ks, "pass123456".toCharArray());
+			sc.init(km.getKeyManagers(), null, null);
+			SSLServerSocket socket = (SSLServerSocket)sc.getServerSocketFactory().createServerSocket(this.port);
+			socket.setEnabledProtocols(new String[]{"TLSv1","TLSv1.1","TLSv1.2"});
+			System.out.println(Arrays.toString(socket.getSupportedCipherSuites()));
+			this.serverSocket = socket;
 		}
-		catch(IOException e)
+		catch(Exception e)
 		{
-			throw new RuntimeException("Failed to open server port " + this.port);
+			throw new RuntimeException("Failed to open server port " + this.port + " - " + e.getMessage());
 		}
 	}
 	

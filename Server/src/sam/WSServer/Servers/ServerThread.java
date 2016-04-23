@@ -7,11 +7,8 @@ import java.net.Socket;
 
 import sam.WSServer.Utils;
 import sam.WSServer.Enums.ConnectionType;
-import sam.WSServer.Messages.BaseMessage;
-import sam.WSServer.Messages.HTTPMessage;
-import sam.WSServer.Messages.WebsocketFrame;
-import sam.WSServer.Messages.WebsocketMessage;
-import sam.WSServer.Processors.ActionProcessor;
+import sam.WSServer.Messages.Message;
+import sam.WSServer.Processors.IProcessor;
 
 
 public class ServerThread extends Thread
@@ -33,7 +30,12 @@ public class ServerThread extends Thread
 		this.threadName = threadName;
 	}
 	
-	public byte[] getBinaryMessage() throws Exception
+	public ConnectionType getConnectionType()
+	{
+		return this.connectionType;
+	}
+	
+	public byte[] getMessage() throws Exception
 	{
 		if(this.socket.isClosed())
 		{
@@ -56,35 +58,7 @@ public class ServerThread extends Thread
 		catch(IOException e)
 		{
 			Utils.logMessage("getMessage IO Exception: " + e.getMessage());
-			return null;
-		}
-	}
-	
-	public ConnectionType getConnectionType()
-	{
-		return this.connectionType;
-	}
-	
-	public String getTextMessage() throws Exception
-	{
-		if(this.socket.isClosed())
-		{
-			Utils.logMessage("Terminating thread: Socket closed");
 			this.kill();
-		}
-		byte[] buffer = new byte[4096];
-		try
-		{
-			int read = this.socketInput.read(buffer, 0, 4096);
-			if(read <= 0)
-			{
-				throw new Exception("Could not read text data");
-			}
-			return new String(buffer, 0, read);
-		}
-		catch(IOException e)
-		{
-			Utils.logMessage("getMessage IO Exception: " + e.getMessage());
 			return null;
 		}
 	}
@@ -114,46 +88,31 @@ public class ServerThread extends Thread
 		 * For this reason, we need to keep the request object until it's complete so we can add data to it
 		 * Once it is complete, we can process the response and treat any new data as a new request
 		 */
-		BaseMessage request = null;
-		WebsocketFrame frame = new WebsocketFrame();
-		ActionProcessor actionProcessor = new ActionProcessor(this);
+		Message message = new Message(this);
 		while(this.canRun)
 		{
 			try
 			{
 				this.socketInput = this.socket.getInputStream();
 				this.socketOutput = this.socket.getOutputStream();
-				//Get some data and add it to the request
-				if(this.connectionType == ConnectionType.HTTP)
+				//Get some data
+				byte[] binaryData = this.getMessage();
+				while(binaryData != null)
 				{
-					if(request == null || !(request instanceof HTTPMessage))
+					binaryData = message.addData(binaryData);
+					if(message.getIsComplete())
 					{
-						request = new HTTPMessage();
-					}
-					String textData = this.getTextMessage();
-					((HTTPMessage) request).addData(textData);
-				}
-				else
-				{
-					if(request == null || !(request instanceof WebsocketMessage))
-					{
-						request = new WebsocketMessage();
-					}
-					byte[] binaryData = this.getBinaryMessage();
-					while(binaryData != null)
-					{
-						binaryData = frame.addData(binaryData);
-						if(frame.isProcessed())
+						IProcessor processor = message.getProcessor();
+						if(!processor.getIsDecoded())
 						{
-							((WebsocketMessage) request).addFrame(frame);
-							frame = new WebsocketFrame();
+							if(!processor.decode())
+							{
+								Utils.logMessage("Undecodable message in ServerThread!");
+							}
 						}
+						processor.process();
+						message = new Message(this);
 					}
-				}
-				if(request.canProcess())
-				{
-					actionProcessor.processAction(request.getMessageAction(), request);
-					request = null;
 				}
 			}
 			catch(IOException e)
@@ -189,29 +148,15 @@ public class ServerThread extends Thread
 	
 	public boolean sendMessage(String message)
 	{
-		if(this.socket.isConnected())
-		{
-			try
-			{
-				Utils.logMessage("Sending message:" + message);
-				this.socketOutput.write(message.getBytes());
-				return true;
-			}
-			catch(IOException e)
-			{
-				Utils.logMessage("Failed to send message:" + e.getMessage());
-				return false;
-			}
-		}
-		return false;
+		Utils.logMessage("Sending string message " + message);
+		return this.sendMessage(message.getBytes());
 	}
 	
 	public boolean setConnectionType(ConnectionType connectionType)
 	{
 		if(this.connectionType == ConnectionType.WEBSOCKET && connectionType == ConnectionType.HTTP)
 		{
-			//Can't downgrade
-			return false;
+			return false; //Can't downgrade
 		}
 		this.connectionType = connectionType;
 		return true;
