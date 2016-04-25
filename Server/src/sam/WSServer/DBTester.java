@@ -36,5 +36,11 @@ public class DBTester
       TestTableMapper row = (TestTableMapper)o.next();
       Utils.logMessage("Row : " + row.id + " , " + row.name + " , " + row.email);
     }
+    Utils.logMessage("---------------------------");
+    TestTableMapper row = (TestTableMapper)new TestTableMapper().loadOneWhere("id = 4");
+    if(row != null)
+    {
+      Utils.logMessage("Row : " + row.id + " , " + row.name + " , " + row.email);
+    }
   }
 }

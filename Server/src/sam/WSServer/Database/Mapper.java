@@ -82,6 +82,37 @@ abstract public class Mapper<T> implements Iterator
     return true;
   }
 
+  public final T loadOneWhere(String where)
+  {
+    this.loadDriver();
+    Field[] fields = this._class.getFields();
+    String fieldList = "";
+    for(Field f : fields)
+    {
+      fieldList += f.getName() + ",";
+    }
+    fieldList = fieldList.substring(0, fieldList.length() - 1);
+    ResultSet resultSet = this._driver.query("SELECT " + fieldList + " FROM " + this.getTableName() + " WHERE " + where + " LIMIT 1");
+    try
+    {
+      if(resultSet.next())
+      {
+        for(Field f : fields)
+        {
+          String value = resultSet.getString(f.getName());
+          f.set(this, value);
+        }
+        return (T)this;
+      }
+      return null;
+    }
+    catch(Exception e)
+    {
+      Utils.logMessage("Error loading record : " + e.getMessage());
+      return null;
+    }
+  }
+
   public final boolean loadWhere(String where)
   {
     this.loadDriver();
