@@ -30,11 +30,6 @@ public class ServerThread extends Thread
 		this.threadName = threadName;
 	}
 	
-	public ServerThread(SSLServer server, Socket socket, String threadName)
-	{
-		
-	}
-	
 	public ConnectionType getConnectionType()
 	{
 		return this.connectionType;

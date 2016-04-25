@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import sam.WSServer.Enums.WebsocketOpcodes;
 import sam.WSServer.Messages.WebsocketFrame;
+import sam.WSServer.Utils;
 
 public class WebsocketResponder
 {
@@ -33,14 +34,15 @@ public class WebsocketResponder
 			return null;
 		}
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		for(int i=0; i<this.frames.size(); i++)
+		for(WebsocketFrame frame : this.frames)
 		{
 			try
 			{
-				buffer.write(this.frames.get(i).getEncodedMessage());
+				buffer.write(frame.getEncodedMessage());
 			}
-			catch (IOException e)
+			catch(IOException e)
 			{
+				Utils.logMessage("Error writing to encoded buffer in WebsocketResponder");
 			}
 		}
 		return buffer.toByteArray();
@@ -71,9 +73,9 @@ public class WebsocketResponder
 			return "";
 		}
 		String message = "";
-		for(int i=0; i<this.frames.size(); i++)
+		for(WebsocketFrame frame : this.frames)
 		{
-			message += this.frames.get(i).getDecodedMessageString();
+			message += frame.getDecodedMessageString();
 		}
 		return message;
 	}
@@ -85,19 +87,14 @@ public class WebsocketResponder
 			//No frames
 			return false;
 		}
-		for(int i=0; i<this.frames.size(); i++)
+		for(WebsocketFrame frame : this.frames)
 		{
-			if(!this.frames.get(i).isProcessed())
+			if(!frame.isProcessed())
 			{
 				//This frame is not processed
 				return false;
 			}
 		}
-		if(!this.frames.get(this.frames.size() - 1).getIsFinalFrame())
-		{
-			//Last frame is not final
-			return false;
-		}
-		return true;
+		return this.frames.get(this.frames.size() - 1).getIsFinalFrame(); //Make sure the last frame is final
 	}
 }

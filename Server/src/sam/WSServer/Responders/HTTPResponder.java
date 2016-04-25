@@ -52,7 +52,7 @@ public class HTTPResponder
 		if(body != null && !body.equals(""))
 		{
 			response += "Content-Length: " + body.length() + "\r\n\r\n";
-			return response += body;
+			return response + body;
 		}
 		else
 		{

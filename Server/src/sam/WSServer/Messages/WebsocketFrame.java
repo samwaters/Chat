@@ -175,10 +175,7 @@ public class WebsocketFrame
 				return false;
 			}
 			this.maskKey = new byte[4];
-			for(int i=0; i<4; i++)
-			{
-				this.maskKey[i] = payload[nextOffset + i];
-			}
+			System.arraycopy(payload, nextOffset, this.maskKey, 0, 4);
 			nextOffset += 4;
 		}
 		if(payload.length < nextOffset + this.payloadLength)
@@ -208,7 +205,7 @@ public class WebsocketFrame
 		int isFinal = (this.isFinalFrame) ? 1 : 0;
 		encoded.write((isFinal << 7) | this.translateOpcode(this.opCode));
 		int hasMask = (this.isMasked) ? 1 : 0;
-		int payloadLength = 0;
+		int payloadLength;
 		if(this.payloadLength > 65536)
 		{
 			payloadLength = 127;
@@ -328,7 +325,7 @@ public class WebsocketFrame
 	
 	/**
 	 * Translate integer to opCode
-	 * @param opCode
+	 * @param opCode The integer opCode to translate
 	 * @return WebsocketOpcodes
 	 */
 	public WebsocketOpcodes translateOpcode(int opCode)
@@ -366,7 +363,7 @@ public class WebsocketFrame
 	
 	/**
 	 * Translate opCode to integer
-	 * @param opCode
+	 * @param opCode The websocket opCode to translate
 	 * @return int
 	 */
 	public int translateOpcode(WebsocketOpcodes opCode)
@@ -413,10 +410,6 @@ public class WebsocketFrame
 		}
 		//Make sure the payload length is valid
 		byte payloadLength = (byte)(payload[1] & 127);
-		if(Byte.toUnsignedInt(payloadLength) < 0)
-		{
-			return false;
-		}
-		return true;
+		return Byte.toUnsignedInt(payloadLength) >= 0;
 	}
 }

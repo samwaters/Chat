@@ -82,21 +82,13 @@ public class Server extends Thread
 	public boolean messageDirect(String user, String message)
 	{
 		ServerThread client = this.getClientThread(user);
-		if(client != null)
-		{
-			return client.sendMessage(message);
-		}
-		return false;
+		return client != null && client.sendMessage(message);
 	}
 	
 	public boolean messageDirect(String user, byte[] message)
 	{
 		ServerThread client = this.getClientThread(user);
-		if(client != null)
-		{
-			return client.sendMessage(message);
-		}
-		return false;
+		return client != null && client.sendMessage(message);
 	}
 	
 	public boolean renameUser(String oldName, String newName)
@@ -126,7 +118,7 @@ public class Server extends Thread
 		createServerSocket();
 		while(this.canRun)
 		{
-			Socket clientSocket = null;
+			Socket clientSocket;
 			try
 			{
 				clientSocket = this.serverSocket.accept();
