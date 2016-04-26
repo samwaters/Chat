@@ -1,4 +1,4 @@
-package sam.WSServer.Database.Mappers;
+package sam.WSServer.Mappers;
 
 import sam.WSServer.Database.Mapper;
 /**
